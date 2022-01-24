@@ -1,6 +1,8 @@
 import { useState, useEffect} from "react";
 import "../styles/App.scss";
 import callToApi  from "./service/CallToApi";
+import Dummy from "./Dummy";
+import SolutionLetters from "./SolutionLetters";
 
 
 function App() {
@@ -21,7 +23,7 @@ function App() {
  
   }, []);
 
-
+// Función para letras acertadas
   const renderSolutionLetters = (index) => {
     const wordLetters = word.split('');
   
@@ -30,33 +32,28 @@ function App() {
     });
   };
 
+  // Función para letras falladas
+
+
+  // Función manejadora del estado
   const handleKeyUp = (ev) => {
   const inputLetter = ev.currentTarget.value;
     if (inputLetter.match("^[a-zA-ZáäéëíïóöúüÁÄÉËÍÏÓÖÚÜñÑ]?$")) {
       setLastLetter(inputLetter);
       if (inputLetter !== "") {
         if (word.includes(inputLetter)) {
-          //userLetters.push(inputLetter); //no se usa en react
-          setuserLetters([...userLetters, inputLetter]); //"push" en react
+          setuserLetters([...userLetters, inputLetter]); 
         } else {
           setArrayNotInclude([...arrayNotInclude, inputLetter]);
           console.log(arrayNotInclude);
           console.log("la letra no está");
+          setNumberOfErrors(numberOfErrors + 1);
         }
       }
+      // para que se borre el input
+      setTimeout(()=>{setLastLetter('')}, 500)
     }
   };
-
-
-
-  const handleClickBtn = (ev) => {
-    ev.preventDefault();
-    console.log("estoy dentro");
-    setNumberOfErrors(numberOfErrors + 1);
-  };
-
-
-
 
 
   return (
@@ -66,13 +63,7 @@ function App() {
       </header>
       <main className="main">
         <section>
-          <div className="solution">
-            <h2 className="title">Solución:</h2>
-            
-            <ul className="letters">
-            {renderSolutionLetters()}
-            </ul>
-          </div>
+         < SolutionLetters renderSolutionLetters={renderSolutionLetters} /> 
           <div className="error">
             <h2 className="title">Letras falladas:</h2>
             <ul className="letters">
@@ -101,25 +92,8 @@ function App() {
             />
           </form>
         </section>
-        <section className={`dummy error-${numberOfErrors}`}>
-          <span className="error-13 eye"></span>
-          <span className="error-12 eye"></span>
-          <span className="error-11 line"></span>
-          <span className="error-10 line"></span>
-          <span className="error-9 line"></span>
-          <span className="error-8 line"></span>
-          <span className="error-7 line"></span>
-          <span className="error-6 head"></span>
-          <span className="error-5 line"></span>
-          <span className="error-4 line"></span>
-          <span className="error-3 line"></span>
-          <span className="error-2 line"></span>
-          <span className="error-1 line"></span>
-        </section>
+        < Dummy numberOfErrors={numberOfErrors}/>
       </main>
-      <button className="incrementarBtn" onClick={handleClickBtn}>
-        Incrementar
-      </button>
     </div>
   );
 }
